@@ -13,6 +13,7 @@ def constrain(g):
     tail_is_a_snake(g)
     snakes_are_connected(g)
     snakes_find_the_head(g)
+    snakes_touch_markers(g)
 
 
 def Abs(x):
@@ -168,3 +169,19 @@ def snakes_find_the_head(g):
             continue
 
         g.add(Implies(c, Reaches(cell[x, y], XYToCell(hx, hy))))
+
+
+def snakes_touch_markers(g):
+    for y in range(g.height):
+        for x in range(g.width):
+            c = g.head_mark(x, y)
+            if c is not None:
+                ns = g.surrounding_cells(x, y)
+                snake_surrounding = sum(BoolToInt(ns[c2]) for c2 in ns)
+                g.add(c == snake_surrounding)
+
+            c = g.tail_mark(x, y)
+            if c is not None:
+                ns = g.surrounding_cells(x, y)
+                snake_surrounding = sum(BoolToInt(ns[c2]) for c2 in ns)
+                g.add(c == snake_surrounding)
