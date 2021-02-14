@@ -15,8 +15,20 @@ grid1 = [".....H...",
          ]
 
 
+grid2 = [".........",
+         "....H....",
+         ".H..HH.T.",
+         ".........",
+         ".H.....H.",
+         ".........",
+         ".H.HH..T.",
+         "....T....",
+         ".........",
+         ]
+
+
 def main():
-    g = Grid(grid1)
+    g = Grid(grid2)
     constrain(g)
     while g.solve():
         display(g)
