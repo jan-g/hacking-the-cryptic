@@ -28,6 +28,10 @@ class Grid:
         self["hx"] = Int("hx")
         self["hy"] = Int("hy")
 
+        # Tail location
+        self["tx"] = Int("tx")
+        self["ty"] = Int("ty")
+
     def __setitem__(self, item, var):
         if item in self.vars:
             raise Exception("can't insert a variable twice")
@@ -39,8 +43,12 @@ class Grid:
     def __call__(self, x, y):
         c = self.grid[x, y]
         if c == ".":
-            if x == self.eval(self["hx"]) and y == self.eval(self["hy"]):
+            hx, hy = self.head()
+            if x == self.eval(hx) and y == self.eval(hy):
                 return Head()
+            tx, ty = self.tail()
+            if x == self.eval(tx) and y == self.eval(ty):
+                return Tail()
             return Empty()
         elif c == "H":
             return HeadMark(0)
@@ -74,6 +82,9 @@ class Grid:
 
     def head(self):
         return self["hx"], self["hy"]
+
+    def tail(self):
+        return self["tx"], self["ty"]
 
     def snake_possible(self, x, y):
         return self.grid[x, y] == "."
