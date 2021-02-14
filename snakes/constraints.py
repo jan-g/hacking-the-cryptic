@@ -8,6 +8,7 @@ def constrain(g):
     head_distances(g)
     tail_distances(g)
     head_is_a_snake(g)
+    tail_is_a_snake(g)
 
 
 def Abs(x):
@@ -64,12 +65,19 @@ def tail_distances(g):
     endpoint_distances(g, *g.tail(), g.tail_mark)
 
 
-def head_is_a_snake(g):
-    hx, hy = g.head()
+def endpoint_is_a_snake(g, ex, ey):
     for y in range(g.height):
         for x in range(g.width):
             c = g.snake(x, y)
             if c is not None:
                 # For the moment, this will leave some snake variables unbound
-                # g.add(Implies(And(hx == x, hy == y), c))
-                g.add(And(hx == x, hy == y) == c)
+                # g.add(Implies(And(ex == x, ey == y), c))
+                g.add(And(ex == x, ey == y) == c)
+
+
+def head_is_a_snake(g):
+    endpoint_is_a_snake(g, *g.head())
+
+
+def tail_is_a_snake(g):
+    endpoint_is_a_snake(g, *g.tail())
