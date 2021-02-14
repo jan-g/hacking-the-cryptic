@@ -8,6 +8,7 @@ TailMark = namedtuple("TailMark", ["distance"])
 Snake = namedtuple("Snake", [])
 Head = namedtuple("Head", [])
 Tail = namedtuple("Tail", [])
+Unknown = namedtuple("Unknown", [])
 
 
 class Grid:
@@ -68,9 +69,12 @@ class Grid:
             if x == self.eval(tx) and y == self.eval(ty):
                 return Tail()
             s = self.snake(x, y)
-            if self.eval(s):
-                return Snake()
-            return Empty()
+            try:
+                if self.eval(s):
+                    return Snake()
+                return Empty()
+            except:
+                return Unknown()
         elif c == "H":
             return HeadMark(self.eval(self["head_{}_{}".format(x, y)]))
         elif c == "T":
@@ -121,6 +125,14 @@ class Grid:
         return None
 
     def snake(self, x, y):
-        if self.grid[x, y] == ".":
+        if self.grid.get((x, y)) == ".":
             return self["snake_{}_{}".format(x, y)]
         return None
+
+    def orthogonal_neighbours(self, x, y):
+        result = []
+        for (dx, dy) in ((-1, 0), (1, 0), (0, -1), (0, 1)):
+            s = self.snake(x + dx, y + dy)
+            if s is not None:
+                result.append(s)
+        return result
