@@ -88,11 +88,22 @@ def tail_is_a_snake(g):
 
 
 def snakes_are_connected(g):
+    hx, hy = g.head()
+    tx, ty = g.tail()
+
     for y in range(g.height):
         for x in range(g.width):
             c = g.snake(x, y)
             if c is None:
                 continue
             ns = g.orthogonal_neighbours(x, y)
-            # If this cell has a snake in it, then it must have exactly two neighbours that are snakes
-            g.add(Implies(c, sum(BoolToInt(c2) for c2 in ns) == 2))
+
+            # If this cell has a snake in it, then it must have exactly two neighbours that are snakes -
+            # or, it must be an endpoint, in which case it has one neighbour.
+
+            is_head = And(x == hx, y == hy)
+            is_tail = And(x == tx, y == ty)
+            is_endpoint = Or(is_head, is_tail)
+
+            snake_neighbours = sum(BoolToInt(c2) for c2 in ns)
+            g.add(Implies(c, snake_neighbours == If(is_endpoint, 1, 2)))
