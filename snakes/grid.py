@@ -50,10 +50,17 @@ class Grid:
             raise ValueError("unknown value at {}, {}".format(x, y))
 
     def solve(self):
-        if self.solver.check != sat:
+        if self.solver.check() != sat:
             return False
         self.model = self.solver.model()
         return True
 
     def eval(self, var):
         return self.model.eval(var)
+
+    def add(self, constraint):
+        """Add a constraint to be satisfied"""
+        self.solver.add(constraint)
+
+    def head(self):
+        return self["hx"], self["hy"]
