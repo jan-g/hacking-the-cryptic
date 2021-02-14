@@ -32,6 +32,17 @@ class Grid:
         self["tx"] = Int("tx")
         self["ty"] = Int("ty")
 
+        # Cells with a head marker
+        for y in range(self.height):
+            for x in range(self.width):
+                if self.grid[x, y] == "H":
+                    v = "head_{}_{}".format(x, y)
+                    self[v] = Int(v)
+
+                if self.grid[x, y] == "T":
+                    v = "tail_{}_{}".format(x, y)
+                    self[v] = Int(v)
+
     def __setitem__(self, item, var):
         if item in self.vars:
             raise Exception("can't insert a variable twice")
@@ -51,9 +62,9 @@ class Grid:
                 return Tail()
             return Empty()
         elif c == "H":
-            return HeadMark(0)
+            return HeadMark(self.eval(self["head_{}_{}".format(x, y)]))
         elif c == "T":
-            return TailMark(0)
+            return TailMark(self.eval(self["tail_{}_{}".format(x, y)]))
         else:
             raise ValueError("unknown value at {}, {}".format(x, y))
 
@@ -88,3 +99,13 @@ class Grid:
 
     def snake_possible(self, x, y):
         return self.grid[x, y] == "."
+
+    def head_mark(self, x, y):
+        if self.grid[x, y] == "H":
+            return self["head_{}_{}".format(x, y)]
+        return None
+
+    def tail_mark(self, x, y):
+        if self.grid[x, y] == "T":
+            return self["tail_{}_{}".format(x, y)]
+        return None

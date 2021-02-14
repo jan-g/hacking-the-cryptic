@@ -1,10 +1,12 @@
 from z3 import Not, And, Or, If
+from .grid import HeadMark, TailMark
 
 
 def constrain(g):
     place_head(g)
     place_tail(g)
     head_and_tail_distinct(g)
+    head_distances(g)
 
 
 def Abs(x):
@@ -43,3 +45,12 @@ def head_and_tail_distinct(g):
     hx, hy = g.head()
     tx, ty = g.tail()
     g.add(Manh(hx, hy, tx, ty) > 1)
+
+
+def head_distances(g):
+    hx, hy = g.head()
+    for y in range(g.height):
+        for x in range(g.width):
+            c = g.head_mark(x, y)
+            if c is not None:
+                g.add(c == Manh(x, y, hx, hy))
