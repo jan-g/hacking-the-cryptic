@@ -1,4 +1,5 @@
 from .grid import Grid
+from .display import display
 
 
 grid1 = [".....H...",
@@ -15,3 +16,4 @@ grid1 = [".....H...",
 
 def main():
     g = Grid(grid1)
+    display(g)
