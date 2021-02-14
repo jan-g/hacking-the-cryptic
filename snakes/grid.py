@@ -74,3 +74,6 @@ class Grid:
 
     def head(self):
         return self["hx"], self["hy"]
+
+    def snake_possible(self, x, y):
+        return self.grid[x, y] == "."
