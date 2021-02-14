@@ -1,5 +1,5 @@
 from collections import namedtuple
-from z3 import Solver, Int, sat, Not, And
+from z3 import Solver, Int, sat, Not, And, Bool
 
 
 Empty = namedtuple("Empty", [])
@@ -32,7 +32,7 @@ class Grid:
         self["tx"] = Int("tx")
         self["ty"] = Int("ty")
 
-        # Cells with a head marker
+        # Cells with a head or tail marker
         for y in range(self.height):
             for x in range(self.width):
                 if self.grid[x, y] == "H":
@@ -42,6 +42,13 @@ class Grid:
                 if self.grid[x, y] == "T":
                     v = "tail_{}_{}".format(x, y)
                     self[v] = Int(v)
+
+        # Cells with a potential snake
+        for y in range(self.height):
+            for x in range(self.width):
+                if self.grid[x, y] == ".":
+                    v = "snake_{}_{}".format(x, y)
+                    self[v] = Bool(v)
 
     def __setitem__(self, item, var):
         if item in self.vars:
@@ -60,6 +67,9 @@ class Grid:
             tx, ty = self.tail()
             if x == self.eval(tx) and y == self.eval(ty):
                 return Tail()
+            s = self.snake(x, y)
+            if self.eval(s):
+                return Snake()
             return Empty()
         elif c == "H":
             return HeadMark(self.eval(self["head_{}_{}".format(x, y)]))
@@ -108,4 +118,9 @@ class Grid:
     def tail_mark(self, x, y):
         if self.grid[x, y] == "T":
             return self["tail_{}_{}".format(x, y)]
+        return None
+
+    def snake(self, x, y):
+        if self.grid[x, y] == ".":
+            return self["snake_{}_{}".format(x, y)]
         return None
