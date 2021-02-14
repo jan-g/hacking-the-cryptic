@@ -1,5 +1,6 @@
 from .grid import Grid
 from .display import display
+from .constraints import constrain
 
 
 grid1 = [".....H...",
@@ -16,4 +17,7 @@ grid1 = [".....H...",
 
 def main():
     g = Grid(grid1)
-    display(g)
+    constrain(g)
+    while g.solve():
+        display(g)
+        _ = input()

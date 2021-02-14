@@ -1,0 +1,2 @@
+def constrain(g):
+    pass

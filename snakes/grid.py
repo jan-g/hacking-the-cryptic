@@ -27,3 +27,6 @@ class Grid:
             return TailMark(0)
         else:
             raise ValueError("unknown value at {}, {}".format(x, y))
+
+    def solve(self):
+        return False
