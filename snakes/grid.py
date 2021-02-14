@@ -1,5 +1,5 @@
 from collections import namedtuple
-from z3 import Solver, Int, sat
+from z3 import Solver, Int, sat, Not, And
 
 
 Empty = namedtuple("Empty", [])
@@ -50,6 +50,16 @@ class Grid:
             raise ValueError("unknown value at {}, {}".format(x, y))
 
     def solve(self):
+        """Find a first or next solution"""
+        if self.model is not None:
+            # We hae a potential solution. Collect up the values assigned to each variable in it
+            # This gives us, eg, [hx == 0, hy == 0]
+            assignments = [var == self.eval(var) for (_, var) in self.vars.items()]
+
+            # Now, add the negation of the conjunction of these. In other words, explicitly rule out
+            # this particular solution
+            self.add(Not(And(*assignments)))
+
         if self.solver.check() != sat:
             return False
         self.model = self.solver.model()

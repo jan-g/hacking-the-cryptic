@@ -20,4 +20,5 @@ def main():
     constrain(g)
     while g.solve():
         display(g)
-        _ = input()
+        if input() == "q":
+            break
