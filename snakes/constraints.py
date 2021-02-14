@@ -7,6 +7,7 @@ def constrain(g):
     place_tail(g)
     head_and_tail_distinct(g)
     head_distances(g)
+    tail_distances(g)
 
 
 def Abs(x):
@@ -47,10 +48,17 @@ def head_and_tail_distinct(g):
     g.add(Manh(hx, hy, tx, ty) > 1)
 
 
-def head_distances(g):
-    hx, hy = g.head()
+def endpoint_distances(g, ex, ey, marker):
     for y in range(g.height):
         for x in range(g.width):
-            c = g.head_mark(x, y)
+            c = marker(x, y)
             if c is not None:
-                g.add(c == Manh(x, y, hx, hy))
+                g.add(c == Manh(x, y, ex, ey))
+
+
+def head_distances(g):
+    endpoint_distances(g, *g.head(), g.head_mark)
+
+
+def tail_distances(g):
+    endpoint_distances(g, *g.tail(), g.tail_mark)
