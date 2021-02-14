@@ -130,9 +130,22 @@ class Grid:
         return None
 
     def orthogonal_neighbours(self, x, y):
-        result = []
+        result = {}
         for (dx, dy) in ((-1, 0), (1, 0), (0, -1), (0, 1)):
             s = self.snake(x + dx, y + dy)
             if s is not None:
-                result.append(s)
+                result[x + dx, y + dy] = s
         return result
+
+    def surrounding_cells(self, x, y):
+        result = {}
+        for (dx, dy) in ((-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1)):
+            s = self.snake(x + dx, y + dy)
+            if s is not None:
+                result[x + dx, y + dy] = s
+        return result
+
+    def coords(self):
+        for y in range(self.height):
+            for x in range(self.width):
+                yield x, y
