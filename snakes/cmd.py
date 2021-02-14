@@ -1,3 +1,6 @@
+from .grid import Grid
+
+
 grid1 = [".....H...",
          ".H.T....H",
          "......T.H",
@@ -9,5 +12,6 @@ grid1 = [".....H...",
          ".........",
          ]
 
+
 def main():
-    pass
+    g = Grid(grid1)
